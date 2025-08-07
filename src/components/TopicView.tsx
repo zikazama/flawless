@@ -755,7 +755,7 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
                     language="javascript" 
                     style={vscDarkPlus}
                     customStyle={{
-                      fontSize: '1.3rem',
+                      fontSize: '1.1rem',
                       lineHeight: '1.5',
                       padding: '1.5rem',
                       borderRadius: '10px'

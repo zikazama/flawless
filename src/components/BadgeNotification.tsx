@@ -12,11 +12,11 @@ const BadgeNotification: React.FC<BadgeNotificationProps> = ({ badges, onClose }
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
-      case 'common': return '#4caf50';
-      case 'rare': return '#2196f3';
-      case 'epic': return '#9c27b0';
-      case 'legendary': return '#ff9800';
-      default: return '#4caf50';
+      case 'common': return '#ffffff';
+      case 'rare': return '#ffffff';
+      case 'epic': return '#ffffff';
+      case 'legendary': return '#1a1a1a';
+      default: return '#ffffff';
     }
   };
 
