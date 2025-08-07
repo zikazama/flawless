@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Course } from '../data/modules';
 import { UserProgress } from '../App';
@@ -10,6 +10,10 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ courses, userProgress }) => {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const getCompletionPercentage = (course: Course) => {
     const totalTopics = course.modules.reduce((acc, module) => acc + module.topics.length, 0);
     const completedInCourse = course.modules.reduce((acc, module) => {

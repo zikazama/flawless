@@ -1,3 +1,11 @@
+export interface QuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number; // index of correct option
+  explanation: string;
+}
+
 export interface Topic {
   id: string;
   title: string;
@@ -5,6 +13,7 @@ export interface Topic {
   analogies?: string;
   examples: string[];
   fillInBlanks: FillInBlank[];
+  quiz?: QuizQuestion[]; // Optional for backward compatibility
   caseStudy: CaseStudy;
 }
 

@@ -62,25 +62,33 @@ export class SoundManager {
     });
   }
 
-  // Success sound - pleasant ascending tone
+  // Success sound - more exciting victory fanfare
   public async playCorrectSound(): Promise<void> {
     try {
-      await this.createTone(523.25, 0.15, 'sine'); // C5
+      // Victory fanfare with multiple harmonies
+      await this.createTone(523.25, 0.1, 'sine'); // C5
+      await new Promise(resolve => setTimeout(resolve, 30));
+      await this.createTone(659.25, 0.1, 'sine'); // E5
+      await new Promise(resolve => setTimeout(resolve, 30));
+      await this.createTone(783.99, 0.1, 'sine'); // G5
+      await new Promise(resolve => setTimeout(resolve, 30));
+      await this.createTone(1046.5, 0.15, 'sine'); // C6
       await new Promise(resolve => setTimeout(resolve, 50));
-      await this.createTone(659.25, 0.15, 'sine'); // E5
-      await new Promise(resolve => setTimeout(resolve, 50));
-      await this.createTone(783.99, 0.2, 'sine');  // G5
+      await this.createTone(1318.5, 0.2, 'triangle'); // E6 - triumphant finish
     } catch (error) {
       console.warn('Could not play correct sound:', error);
     }
   }
 
-  // Error sound - descending tone
+  // Error sound - dramatic game show buzzer
   public async playIncorrectSound(): Promise<void> {
     try {
-      await this.createTone(349.23, 0.2, 'sawtooth'); // F4
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await this.createTone(293.66, 0.3, 'sawtooth'); // D4
+      // Dramatic buzzer sound
+      await this.createTone(200, 0.15, 'sawtooth'); // Low dramatic tone
+      await new Promise(resolve => setTimeout(resolve, 50));
+      await this.createTone(150, 0.15, 'sawtooth'); // Even lower
+      await new Promise(resolve => setTimeout(resolve, 50));
+      await this.createTone(100, 0.25, 'square'); // Final dramatic buzz
     } catch (error) {
       console.warn('Could not play incorrect sound:', error);
     }
@@ -113,6 +121,26 @@ export class SoundManager {
       await this.createTone(880.00, 0.2, 'triangle'); // A5
     } catch (error) {
       console.warn('Could not play case study success sound:', error);
+    }
+  }
+
+  // Timer tick sound - clock tick
+  public async playTimerTick(): Promise<void> {
+    try {
+      // Sharp click sound like a clock tick
+      await this.createTone(800, 0.05, 'square'); // Sharp high tick
+    } catch (error) {
+      console.warn('Could not play timer tick sound:', error);
+    }
+  }
+
+  // Timer warning sound for last few seconds
+  public async playTimerWarning(): Promise<void> {
+    try {
+      // More urgent tick for countdown
+      await this.createTone(1000, 0.08, 'triangle'); // Higher, more urgent tick
+    } catch (error) {
+      console.warn('Could not play timer warning sound:', error);
     }
   }
 
@@ -152,5 +180,17 @@ export const playCompletionSound = () => {
 export const playCaseStudySuccess = () => {
   if (SoundManager.soundsEnabled) {
     soundManager.playCaseStudySuccess();
+  }
+};
+
+export const playTimerTick = () => {
+  if (SoundManager.soundsEnabled) {
+    soundManager.playTimerTick();
+  }
+};
+
+export const playTimerWarning = () => {
+  if (SoundManager.soundsEnabled) {
+    soundManager.playTimerWarning();
   }
 };

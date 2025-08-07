@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Course, Topic, FillInBlank } from '../data/modules';
+import { Course, Topic, FillInBlank, QuizQuestion } from '../data/modules';
 import { UserProgress } from '../App';
 import { playCorrectSound, playIncorrectSound, playCaseStudySuccess } from '../utils/sounds';
+import Quiz from './Quiz';
+import MonacoCodeEditor from './MonacoCodeEditor';
+import { getRandomQuestions } from '../data/quizQuestions';
 import './TopicView.css';
 
 interface TopicViewProps {
@@ -20,13 +23,15 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
     topicId: string; 
   }>();
   
-  const [currentSection, setCurrentSection] = useState<'content' | 'exercises' | 'case-study'>('content');
+  const [currentSection, setCurrentSection] = useState<'content' | 'exercises' | 'quiz' | 'case-study'>('content');
   const [fillInAnswers, setFillInAnswers] = useState<{[key: string]: string[]}>({});
   const [fillInResults, setFillInResults] = useState<{[key: string]: boolean}>({});
   const [caseStudyCode, setCaseStudyCode] = useState('');
   const [caseStudyResult, setCaseStudyResult] = useState<'idle' | 'success' | 'error'>('idle');
   const [showCongrats, setShowCongrats] = useState(false);
   const [allExercisesCompleted, setAllExercisesCompleted] = useState(false);
+  const [quizPassed, setQuizPassed] = useState(false);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [caseStudyCompleted, setCaseStudyCompleted] = useState(false);
   const [codeValidationMessage, setCodeValidationMessage] = useState('');
 
@@ -40,12 +45,26 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
     setFillInAnswers({});
     setFillInResults({});
     setAllExercisesCompleted(false);
+    setQuizPassed(false);
     setCaseStudyCompleted(false);
     setCaseStudyResult('idle');
     setCodeValidationMessage('');
     
+    // Always generate new random questions when component mounts
+    // Quiz should restart from instructions page after refresh
+    const questions = getRandomQuestions(topicId || '', 5);
+    setQuizQuestions(questions);
+    
+    // Clear any saved quiz progress on mount to ensure fresh start
+    localStorage.removeItem(`quiz_${topicId}_started`);
+    localStorage.removeItem(`quiz_${topicId}_currentIndex`);
+    localStorage.removeItem(`quiz_${topicId}_currentScore`);
+    localStorage.removeItem(`quiz_${topicId}_userAnswers`);
+    localStorage.removeItem(`quiz_${topicId}_questions`);
+    
     const savedAnswers = localStorage.getItem(`fillInAnswers_${topicId}`);
     const savedResults = localStorage.getItem(`fillInResults_${topicId}`);
+    const savedQuizPassed = localStorage.getItem(`quiz_${topicId}_passed`);
     const savedCaseStudyCode = localStorage.getItem(`caseStudyCode_${topicId}`);
     const savedCaseStudyResult = localStorage.getItem(`caseStudyResult_${topicId}`);
     
@@ -61,6 +80,10 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
       setAllExercisesCompleted(allCompleted);
     }
     
+    if (savedQuizPassed) {
+      setQuizPassed(JSON.parse(savedQuizPassed));
+    }
+    
     if (savedCaseStudyCode) {
       setCaseStudyCode(savedCaseStudyCode);
     } else if (topic?.caseStudy.initialCode) {
@@ -74,9 +97,10 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
     }
   }, [topicId, topic]);
 
-  // Reset to content section when topic changes
+  // Reset to content section and scroll to top when topic changes
   useEffect(() => {
     setCurrentSection('content');
+    window.scrollTo(0, 0);
   }, [topicId]);
 
 
@@ -514,6 +538,21 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
     return allCorrect;
   };
 
+  const handleQuizComplete = (passed: boolean) => {
+    setQuizPassed(passed);
+    if (passed) {
+      // Automatically switch to case study section
+      setTimeout(() => {
+        setCurrentSection('case-study');
+        window.scrollTo(0, 0);
+      }, 2000);
+    } else {
+      // Generate new random questions for retry
+      const newQuestions = getRandomQuestions(topicId || '', 5);
+      setQuizQuestions(newQuestions);
+    }
+  };
+
   const runCaseStudy = () => {
     try {
       // First check if code follows the required patterns
@@ -593,8 +632,8 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
     }
   };
 
-  // Check if user can proceed to next topic - MUST complete current topic's exercises and case study
-  const canProceedToNext = allExercisesCompleted && caseStudyCompleted;
+  // Check if user can proceed to next topic - MUST complete exercises, quiz, and case study
+  const canProceedToNext = allExercisesCompleted && quizPassed && caseStudyCompleted;
 
   // Helper functions to generate examples
   const getExampleInput = (caseStudy: any) => {
@@ -741,19 +780,37 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
       <div className="section-tabs">
         <button 
           className={`tab ${currentSection === 'content' ? 'active' : ''}`}
-          onClick={() => setCurrentSection('content')}
+          onClick={() => {
+            setCurrentSection('content');
+            window.scrollTo(0, 0);
+          }}
         >
           📖 Materi
         </button>
         <button 
           className={`tab ${currentSection === 'exercises' ? 'active' : ''}`}
-          onClick={() => setCurrentSection('exercises')}
+          onClick={() => {
+            setCurrentSection('exercises');
+            window.scrollTo(0, 0);
+          }}
         >
           ✏️ Latihan ({topic.fillInBlanks.length})
         </button>
         <button 
+          className={`tab ${currentSection === 'quiz' ? 'active' : ''}`}
+          onClick={() => {
+            setCurrentSection('quiz');
+            window.scrollTo(0, 0);
+          }}
+        >
+          🎯 Quiz
+        </button>
+        <button 
           className={`tab ${currentSection === 'case-study' ? 'active' : ''}`}
-          onClick={() => setCurrentSection('case-study')}
+          onClick={() => {
+            setCurrentSection('case-study');
+            window.scrollTo(0, 0);
+          }}
         >
           💡 Study Case
         </button>
@@ -813,6 +870,25 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
                 {renderFillInBlank(exercise)}
               </div>
             ))}
+            {allExercisesCompleted && (
+              <div className="exercises-complete-message">
+                <p>✅ Semua latihan selesai! Anda juga bisa mengerjakan Quiz dan Study Case kapan saja.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {currentSection === 'quiz' && (
+          <div className="quiz-section">
+            <h3>🎯 Quiz Interaktif</h3>
+            <p className="section-desc">
+              Jawab 5 pertanyaan dengan benar (minimal 4 benar untuk lulus). Waktu: 10 detik per soal. Quiz dapat dikerjakan kapan saja, tidak perlu menunggu latihan selesai.
+            </p>
+            <Quiz 
+              questions={quizQuestions}
+              onComplete={handleQuizComplete}
+              topicId={topicId || ''}
+            />
           </div>
         )}
 
@@ -840,67 +916,19 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
             </div>
 
             <div className="code-editor">
-              <textarea
+              <MonacoCodeEditor
                 value={caseStudyCode}
-                onChange={(e) => {
+                onChange={(value) => {
                   if (caseStudyCompleted) return; // Disable editing if already completed
                   
-                  setCaseStudyCode(e.target.value);
+                  setCaseStudyCode(value);
                   // Auto-save code as user types
-                  localStorage.setItem(`caseStudyCode_${topicId}`, e.target.value);
+                  localStorage.setItem(`caseStudyCode_${topicId}`, value);
                 }}
-                onKeyDown={(e) => {
-                  if (caseStudyCompleted) return; // Disable keyboard events if completed
-                  
-                  // Handle Tab key for indentation
-                  if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const textarea = e.target as HTMLTextAreaElement;
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    
-                    // Insert tab character or spaces
-                    const tabChar = '  '; // 2 spaces
-                    const newValue = textarea.value.substring(0, start) + tabChar + textarea.value.substring(end);
-                    
-                    setCaseStudyCode(newValue);
-                    localStorage.setItem(`caseStudyCode_${topicId}`, newValue);
-                    
-                    // Set cursor position after the inserted tab
-                    setTimeout(() => {
-                      textarea.selectionStart = textarea.selectionEnd = start + tabChar.length;
-                    }, 0);
-                  }
-                  
-                  // Handle Enter key for auto-indentation
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const textarea = e.target as HTMLTextAreaElement;
-                    const start = textarea.selectionStart;
-                    const end = textarea.selectionEnd;
-                    const lines = textarea.value.substring(0, start).split('\n');
-                    const currentLine = lines[lines.length - 1];
-                    
-                    // Count leading spaces for indentation
-                    const leadingSpaces = currentLine.match(/^(\s*)/)?.[1] || '';
-                    
-                    // Add extra indentation if line ends with { or (
-                    const extraIndent = /[{(]\s*$/.test(currentLine.trim()) ? '  ' : '';
-                    
-                    const newIndent = '\n' + leadingSpaces + extraIndent;
-                    const newValue = textarea.value.substring(0, start) + newIndent + textarea.value.substring(end);
-                    setCaseStudyCode(newValue);
-                    localStorage.setItem(`caseStudyCode_${topicId}`, newValue);
-                    
-                    // Set cursor position after the inserted newline and indentation
-                    setTimeout(() => {
-                      textarea.selectionStart = textarea.selectionEnd = start + newIndent.length;
-                    }, 0);
-                  }
-                }}
-                placeholder="Tulis kode Anda di sini..."
-                rows={15}
+                language="javascript"
                 disabled={caseStudyCompleted}
+                placeholder="// Tulis kode Anda di sini..."
+                height="400px"
               />
             </div>
 
@@ -942,18 +970,33 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
         {nextTopic && !canProceedToNext && (
           <div className="locked-next">
             <span className="locked-button">
-              🔒 Selesaikan semua latihan dan study case untuk melanjutkan
+              🔒 Selesaikan semua Latihan, Quiz, dan Study Case untuk melanjutkan
             </span>
             <div className="progress-status">
               <button 
                 className={`status-item clickable ${allExercisesCompleted ? 'completed' : 'pending'}`}
-                onClick={() => setCurrentSection('exercises')}
+                onClick={() => {
+                  setCurrentSection('exercises');
+                  window.scrollTo(0, 0);
+                }}
               >
                 {allExercisesCompleted ? '✅' : '⏳'} Latihan ({Object.values(fillInResults).filter(r => r === true).length}/{topic?.fillInBlanks.length || 0})
               </button>
               <button 
+                className={`status-item clickable ${quizPassed ? 'completed' : 'pending'}`}
+                onClick={() => {
+                  setCurrentSection('quiz');
+                  window.scrollTo(0, 0);
+                }}
+              >
+                {quizPassed ? '✅' : '⏳'} Quiz
+              </button>
+              <button 
                 className={`status-item clickable ${caseStudyCompleted ? 'completed' : 'pending'}`}
-                onClick={() => setCurrentSection('case-study')}
+                onClick={() => {
+                  setCurrentSection('case-study');
+                  window.scrollTo(0, 0);
+                }}
               >
                 {caseStudyCompleted ? '✅' : '⏳'} Study Case
               </button>
@@ -968,18 +1011,33 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
         {!nextTopic && !canProceedToNext && (
           <div className="locked-next">
             <span className="locked-button">
-              🔒 Selesaikan semua latihan dan study case untuk menyelesaikan topik
+              🔒 Selesaikan semua Latihan, Quiz, dan Study Case untuk menyelesaikan topik
             </span>
             <div className="progress-status">
               <button 
                 className={`status-item clickable ${allExercisesCompleted ? 'completed' : 'pending'}`}
-                onClick={() => setCurrentSection('exercises')}
+                onClick={() => {
+                  setCurrentSection('exercises');
+                  window.scrollTo(0, 0);
+                }}
               >
                 {allExercisesCompleted ? '✅' : '⏳'} Latihan ({Object.values(fillInResults).filter(r => r === true).length}/{topic?.fillInBlanks.length || 0})
               </button>
               <button 
+                className={`status-item clickable ${quizPassed ? 'completed' : 'pending'}`}
+                onClick={() => {
+                  setCurrentSection('quiz');
+                  window.scrollTo(0, 0);
+                }}
+              >
+                {quizPassed ? '✅' : '⏳'} Quiz
+              </button>
+              <button 
                 className={`status-item clickable ${caseStudyCompleted ? 'completed' : 'pending'}`}
-                onClick={() => setCurrentSection('case-study')}
+                onClick={() => {
+                  setCurrentSection('case-study');
+                  window.scrollTo(0, 0);
+                }}
               >
                 {caseStudyCompleted ? '✅' : '⏳'} Study Case
               </button>

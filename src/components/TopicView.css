@@ -71,13 +71,24 @@
   color: #ffffff;
 }
 
-.tab:hover {
+.tab:hover:not(.disabled) {
   background: #444466;
 }
 
 .tab.active {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+}
+
+.tab.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #222244;
+  color: #666;
+}
+
+.tab.disabled:hover {
+  background: #222244;
 }
 
 .section-content {
@@ -284,6 +295,35 @@
   border-radius: 5px;
   color: #ffeb3b;
   border: 1px solid #555;
+}
+
+.exercises-complete-message {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+  animation: slideIn 0.5s ease;
+}
+
+.quiz-section > h3 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+/* Ensure quiz questions inside quiz containers have dark color */
+.quiz-section .quiz-container h3.question {
+  color: #111827 !important;
+}
+
+.quiz-section .section-desc {
+  color: #cccccc;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
 }
 
 .case-description {

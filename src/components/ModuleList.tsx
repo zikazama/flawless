@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Course } from '../data/modules';
 import { UserProgress } from '../App';
@@ -12,6 +12,11 @@ interface ModuleListProps {
 const ModuleList: React.FC<ModuleListProps> = ({ courses, userProgress }) => {
   const { courseId } = useParams<{ courseId: string }>();
   const course = courses.find(c => c.id === courseId);
+
+  // Scroll to top when component mounts or courseId changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [courseId]);
 
   if (!course) {
     return <Navigate to="/" replace />;

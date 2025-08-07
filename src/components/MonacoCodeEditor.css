@@ -1,0 +1,233 @@
+.monaco-editor-container {
+  position: relative;
+  background: #2d2d2d;
+  border-radius: 10px;
+  border: 2px solid #444;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.monaco-editor-container:not(.disabled):hover {
+  border-color: #667eea;
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+}
+
+.monaco-editor-container:not(.disabled):focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+}
+
+.monaco-editor-container.disabled {
+  opacity: 0.85;
+  position: relative;
+}
+
+/* Header */
+.monaco-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid #333;
+}
+
+.editor-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.language-badge {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+  color: #9fa6fc;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.status-badge {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(56, 142, 60, 0.2));
+  color: #4caf50;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.editor-hints {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hint-item {
+  color: #888;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Monaco Editor Wrapper */
+.monaco-editor-wrapper {
+  position: relative;
+}
+
+/* Loading State */
+.editor-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 350px;
+  background: #2d2d2d;
+  color: #9ca3af;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(102, 126, 234, 0.2);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Disabled Overlay */
+.editor-disabled-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(45, 45, 45, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.disabled-message {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+  animation: pulseSuccess 2s infinite;
+}
+
+@keyframes pulseSuccess {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Monaco Editor Custom Styling Override */
+.monaco-editor-container .monaco-editor {
+  padding-top: 0 !important;
+  /* Match code example styling */
+  font-size: 1.1rem !important;
+  line-height: 1.5 !important;
+}
+
+.monaco-editor-container .monaco-editor .margin {
+  background: #2d2d2d !important;
+}
+
+.monaco-editor-container .monaco-editor .monaco-editor-background {
+  background: #2d2d2d !important;
+}
+
+.monaco-editor-container .monaco-editor .lines-content {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  font-size: 1.1rem !important;
+}
+
+/* Override Monaco's internal font sizing */
+.monaco-editor-container .view-line {
+  font-size: 1.1rem !important;
+  line-height: 1.5 !important;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+}
+
+.monaco-editor-container .view-lines {
+  font-size: 1.1rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Custom scrollbar for Monaco */
+.monaco-editor-container .monaco-scrollable-element > .scrollbar {
+  opacity: 0.7;
+}
+
+.monaco-editor-container .monaco-scrollable-element > .scrollbar.vertical {
+  width: 10px !important;
+}
+
+.monaco-editor-container .monaco-scrollable-element > .scrollbar.horizontal {
+  height: 10px !important;
+}
+
+.monaco-editor-container .monaco-scrollable-element > .scrollbar > .slider {
+  background: #667eea !important;
+  border-radius: 5px !important;
+}
+
+.monaco-editor-container .monaco-scrollable-element > .scrollbar > .slider:hover {
+  background: #764ba2 !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .monaco-editor-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .editor-hints {
+    display: none;
+  }
+  
+  .monaco-editor-container {
+    border-radius: 8px;
+  }
+  
+  .disabled-message {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .monaco-editor-header {
+    padding: 0.5rem;
+  }
+  
+  .language-badge,
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+  
+  .disabled-message {
+    font-size: 0.9rem;
+    padding: 0.5rem 1.2rem;
+  }
+}
