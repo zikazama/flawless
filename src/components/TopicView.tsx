@@ -252,9 +252,20 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
       else if (['of', 'in'].some(kw => exercise.blanks.includes(kw))) {
         isValidAnswer = ['of', 'in'].includes(answer.toLowerCase());
       }
-      // Strict mode
+      // Strict mode - support various quote characters from mobile keyboards
       else if (exercise.blanks.includes('"use strict";')) {
-        isValidAnswer = ['"use strict";', "'use strict';"].includes(answer);
+        const validStrictModes = [
+          '"use strict";', "'use strict';", 
+          '"use strict";', '"use strict";', // curly quotes
+          '\u2018use strict\u2019;', '\u2019use strict\u2018;', // curly single quotes
+          '「use strict」;', // Japanese quotes
+          'use strict', // without quotes/semicolon
+          '"use strict"', "'use strict'" // without semicolon
+        ];
+        isValidAnswer = validStrictModes.some(valid => 
+          answer.toLowerCase().replace(/[\s;]/g, '') === valid.toLowerCase().replace(/[\s;]/g, '') ||
+          answer.includes('use strict')
+        );
       }
       // undefined and null values
       else if (['undefined', 'null'].some(val => exercise.blanks.includes(val))) {
@@ -289,9 +300,20 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
 
   const isValidStringLiteral = (value: string): boolean => {
     const trimmed = value.trim();
-    return (trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-           (trimmed.startsWith("'") && trimmed.endsWith("'")) ||
-           (trimmed.startsWith('`') && trimmed.endsWith('`'));
+    // Support regular quotes, curly quotes from mobile keyboards, and backticks
+    const quoteChars = ['"', "'", '`', '\u201c', '\u201d', '\u2018', '\u2019', '「', '」'];
+    
+    return quoteChars.some(startQuote => {
+      const endQuote = startQuote === '\u201c' ? '\u201d' : 
+                       startQuote === '\u201d' ? '\u201c' : 
+                       startQuote === '\u2018' ? '\u2019' :
+                       startQuote === '\u2019' ? '\u2018' :
+                       startQuote === '「' ? '」' :
+                       startQuote;
+      return trimmed.startsWith(startQuote) && trimmed.endsWith(endQuote);
+    }) || 
+    // Also accept unquoted strings if they look like string values
+    (trimmed.length > 0 && !trimmed.includes(' ') && isNaN(Number(trimmed)) && trimmed !== 'true' && trimmed !== 'false');
   };
 
   const isValidArray = (value: string): boolean => {
@@ -623,8 +645,18 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
                     onChange={(e) => {
                       if (result === true) return; // Disable editing if already correct
                       
+                      let inputValue = e.target.value;
+                      
+                      // Normalize mobile keyboard quotes to standard quotes
+                      inputValue = inputValue
+                        .replace(/[\u201c\u201d]/g, '"')  // curly double quotes to straight
+                        .replace(/[\u2018\u2019]/g, "'")  // curly single quotes to straight
+                        .replace(/[「」]/g, '"') // Japanese quotes to double quotes
+                        .replace(/[『』]/g, '"') // Japanese corner brackets to double quotes
+                        .replace(/[\u201a\u201e]/g, '"');  // Other quote variations
+                      
                       const newAnswers = [...answers];
-                      newAnswers[index] = e.target.value;
+                      newAnswers[index] = inputValue;
                       const newFillInAnswers = {
                         ...fillInAnswers,
                         [exercise.id]: newAnswers

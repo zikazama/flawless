@@ -306,6 +306,13 @@
   margin-top: 1.5rem;
 }
 
+@media (max-width: 900px) {
+  .example-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
 
 .example-input,
 .example-output {
@@ -313,6 +320,9 @@
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #333;
+  min-width: 0; /* Prevent grid items from overflowing */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .example-input h4,
@@ -333,6 +343,11 @@
   font-family: 'Courier New', monospace;
   font-size: 1.3rem;
   border-left: 3px solid #667eea;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .example-result {
@@ -358,8 +373,9 @@
   border: none;
   border-radius: 10px;
   font-family: 'Courier New', monospace;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   resize: vertical;
+  line-height: 1.4;
 }
 
 .code-editor textarea:disabled {
@@ -522,6 +538,11 @@
     gap: 1rem;
   }
 
+  .example-input,
+  .example-output {
+    padding: 0.8rem;
+  }
+
   .example-input h4,
   .example-output h4 {
     font-size: 0.9rem;
@@ -529,10 +550,16 @@
 
   .example-code,
   .example-result {
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding: 0.8rem;
     overflow-x: auto;
     max-width: 100%;
+    word-break: break-all;
+  }
+
+  .code-editor textarea {
+    font-size: 1rem;
+    padding: 1rem;
   }
 
   .fill-input {
@@ -580,5 +607,31 @@
 
   .code-part {
     font-size: 0.9rem;
+  }
+
+  .example-input,
+  .example-output {
+    padding: 0.6rem;
+  }
+
+  .example-input h4,
+  .example-output h4 {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .example-code,
+  .example-result {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    line-height: 1.3;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  .code-editor textarea {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+    line-height: 1.3;
   }
 }
