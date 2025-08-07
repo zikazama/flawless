@@ -133,6 +133,16 @@
   overflow: hidden;
 }
 
+.code-example pre {
+  font-size: 1.3rem !important;
+  line-height: 1.5 !important;
+}
+
+.code-example code {
+  font-size: 1.3rem !important;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+}
+
 .exercises-section h3,
 .case-study-section h3 {
   color: #ffffff;
@@ -169,18 +179,18 @@
   border-radius: 8px;
   font-family: 'Courier New', monospace;
   margin-bottom: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .exercise-code pre {
   margin: 0;
   white-space: pre-wrap;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .code-part {
   color: #f8f8f2;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .fill-input {
@@ -314,20 +324,20 @@
 .example-code {
   background: #2d2d2d;
   color: #61dafb;
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 5px;
   font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   border-left: 3px solid #667eea;
 }
 
 .example-result {
   background: #1a3a1a;
   color: #4caf50;
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 5px;
   font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   border-left: 3px solid #4caf50;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -344,7 +354,7 @@
   border: none;
   border-radius: 10px;
   font-family: 'Courier New', monospace;
-  font-size: 1rem;
+  font-size: 1.3rem;
   resize: vertical;
 }
 
@@ -486,7 +496,7 @@
   }
 
   .code-editor textarea {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 
   .navigation-footer {
@@ -515,8 +525,8 @@
 
   .example-code,
   .example-result {
-    font-size: 0.8rem;
-    padding: 0.6rem;
+    font-size: 1.1rem;
+    padding: 0.8rem;
     overflow-x: auto;
     max-width: 100%;
   }

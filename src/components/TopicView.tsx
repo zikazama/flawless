@@ -751,7 +751,16 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
               <h4>📝 Contoh Kode</h4>
               {topic.examples.map((example, index) => (
                 <div key={index} className="code-example">
-                  <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+                  <SyntaxHighlighter 
+                    language="javascript" 
+                    style={vscDarkPlus}
+                    customStyle={{
+                      fontSize: '1.3rem',
+                      lineHeight: '1.5',
+                      padding: '1.5rem',
+                      borderRadius: '10px'
+                    }}
+                  >
                     {example}
                   </SyntaxHighlighter>
                 </div>
