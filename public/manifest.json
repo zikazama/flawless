@@ -3,17 +3,17 @@
   "name": "Flawless - Learn Code With Flawless",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://zikazama.github.io/images/favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/png"
     },
     {
-      "src": "favicon.png",
+      "src": "https://zikazama.github.io/images/favicon.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "favicon.png",
+      "src": "https://zikazama.github.io/images/favicon.png",
       "type": "image/png",
       "sizes": "512x512"
     }
