@@ -5,6 +5,9 @@
   border: 2px solid #444;
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .code-editor-container.focused {
@@ -22,6 +25,8 @@
   min-height: 300px;
   max-height: 500px;
   overflow: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Syntax highlighter background */
@@ -144,27 +149,58 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+  .code-editor-container {
+    border-radius: 8px;
+    margin: 0.5rem 0;
+  }
+
   .code-textarea {
     font-size: 1rem;
     padding: 1rem;
+    line-height: 1.4;
   }
   
   .code-highlighter pre {
     padding: 1rem !important;
     font-size: 1rem !important;
+    line-height: 1.4 !important;
   }
   
   .code-editor-wrapper {
     min-height: 250px;
-    max-height: 400px;
+    max-height: 60vh;
+  }
+
+  .code-editor-toolbar {
+    top: 0.3rem;
+    right: 0.3rem;
+    gap: 0.3rem;
+  }
+
+  .language-badge,
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  /* Better scrollbar for mobile */
+  .code-editor-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
 }
 
 @media (max-width: 480px) {
+  .code-editor-container {
+    border-radius: 6px;
+    border-width: 1px;
+  }
+
   .code-textarea {
     font-size: 0.9rem;
     padding: 0.8rem;
     line-height: 1.3;
+    tab-size: 1;
   }
   
   .code-highlighter pre {
@@ -175,6 +211,93 @@
   
   .code-editor-wrapper {
     min-height: 200px;
-    max-height: 350px;
+    max-height: 50vh;
+  }
+
+  .code-editor-toolbar {
+    top: 0.2rem;
+    right: 0.2rem;
+  }
+
+  .language-badge,
+  .status-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+  }
+
+  /* Hide scrollbars on very small screens to save space */
+  .code-editor-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .code-editor-wrapper {
+    min-height: 150px;
+    max-height: 40vh;
+  }
+
+  .code-textarea {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .code-highlighter pre {
+    padding: 0.6rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .code-editor-container {
+    /* Prevent double-tap zoom */
+    touch-action: manipulation;
+  }
+
+  .code-textarea {
+    /* Better touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .code-editor-wrapper {
+    /* Smooth scrolling on touch devices */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbars on touch devices to save space */
+  .code-editor-wrapper {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .code-editor-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* High DPI screens optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .code-textarea {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Dark mode support for system preference */
+@media (prefers-color-scheme: dark) {
+  .code-editor-container {
+    border-color: #555;
+  }
+  
+  .code-editor-container.focused {
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
   }
 }

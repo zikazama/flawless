@@ -1,6 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Editor, { Monaco } from '@monaco-editor/react';
 import './MonacoCodeEditor.css';
+import { 
+  detectMobileEnvironment, 
+  getOptimalEditorHeight, 
+  getMobileMonacoOptions,
+  applyMobileOptimizations,
+  createMobileResponsiveObserver
+} from '../utils/mobileOptimization';
 
 interface MonacoCodeEditorProps {
   value: string;
@@ -20,36 +27,92 @@ const MonacoCodeEditor: React.FC<MonacoCodeEditorProps> = ({
   height = '350px'
 }) => {
   const editorRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mobileEnv, setMobileEnv] = useState(detectMobileEnvironment());
+  const [editorHeight, setEditorHeight] = useState(getOptimalEditorHeight(height));
+
+  // Effect for mobile detection and responsive updates
+  useEffect(() => {
+    const updateMobileEnv = () => {
+      const newEnv = detectMobileEnvironment();
+      setMobileEnv(newEnv);
+      setEditorHeight(getOptimalEditorHeight(height));
+    };
+
+    const handleResize = () => {
+      updateMobileEnv();
+    };
+
+    const handleOrientationChange = () => {
+      setTimeout(updateMobileEnv, 500);
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, [height]);
+
+  // Effect for applying mobile optimizations
+  useEffect(() => {
+    if (containerRef.current && mobileEnv.isMobile) {
+      applyMobileOptimizations(containerRef.current);
+    }
+  }, [mobileEnv.isMobile]);
 
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
     editorRef.current = editor;
     
-    // Focus editor on mount
-    editor.focus();
+    // Focus editor on mount (but not on mobile to avoid virtual keyboard)
+    if (!mobileEnv.isMobile) {
+      editor.focus();
+    }
 
-    // Add keyboard shortcuts
-    editor.addAction({
-      id: 'run-code',
-      label: 'Run Code',
-      keybindings: [
-        monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-      ],
-      run: () => {
-        // Trigger run code action
-        const runButton = document.querySelector('.run-btn') as HTMLButtonElement;
-        if (runButton) {
-          runButton.click();
+    // Add keyboard shortcuts (desktop only)
+    if (!mobileEnv.isMobile) {
+      editor.addAction({
+        id: 'run-code',
+        label: 'Run Code',
+        keybindings: [
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        ],
+        run: () => {
+          // Trigger run code action
+          const runButton = document.querySelector('.run-btn') as HTMLButtonElement;
+          if (runButton) {
+            runButton.click();
+          }
         }
-      }
-    });
+      });
+    }
 
-    // Handle placeholder selection when empty
-    if (!value) {
-      // Select all placeholder text so it gets replaced when user types
+    // Handle placeholder selection when empty (desktop only)
+    if (!value && !mobileEnv.isMobile) {
       setTimeout(() => {
         editor.setSelection(editor.getModel()?.getFullModelRange());
       }, 100);
     }
+
+    // Set up responsive observer
+    const cleanup = createMobileResponsiveObserver(
+      { current: editor },
+      (dimensions) => {
+        console.log('Editor resized to:', dimensions);
+      }
+    );
+
+    // Apply mobile optimizations to the editor container
+    if (mobileEnv.isMobile && containerRef.current) {
+      setTimeout(() => {
+        applyMobileOptimizations(containerRef.current!);
+      }, 100);
+    }
+
+    // Return cleanup function
+    return cleanup;
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -60,84 +123,50 @@ const MonacoCodeEditor: React.FC<MonacoCodeEditorProps> = ({
     }
   };
 
-  // Monaco Editor options  
-  const options: any = {
-    minimap: { enabled: false },
-    fontSize: 17.6, // 1.1rem = 17.6px (assuming 16px base)
-    lineHeight: 26.4, // 1.5 * 17.6px = 26.4px
-    fontFamily: "'Courier New', 'Monaco', 'Menlo', monospace",
-    automaticLayout: true,
+  // Generate Monaco Editor options with mobile optimizations
+  const options = getMobileMonacoOptions({
+    readOnly: disabled,
+    theme: 'vs-dark',
     formatOnType: true,
     formatOnPaste: true,
     autoIndent: 'full',
     tabSize: 2,
-    wordWrap: 'on',
-    scrollBeyondLastLine: false,
-    readOnly: disabled,
-    theme: 'vs-dark',
-    padding: { top: 15, bottom: 15 },
     renderLineHighlight: 'all',
     cursorBlinking: 'smooth',
     smoothScrolling: true,
-    contextmenu: true,
-    quickSuggestions: {
-      other: true,
-      comments: true,
-      strings: true
-    },
-    parameterHints: {
-      enabled: true
-    },
-    suggestOnTriggerCharacters: true,
-    acceptSuggestionOnCommitCharacter: true,
-    tabCompletion: 'on',
-    wordBasedSuggestions: true,
     suggestSelection: 'first',
-    folding: true,
     foldingStrategy: 'indentation',
-    showFoldingControls: 'mouseover',
     renderWhitespace: 'none',
     renderControlCharacters: false,
-    renderIndentGuides: true,
-    renderLineHighlightOnlyWhenFocus: false,
     useTabStops: true,
-    // Accessibility
-    accessibilitySupport: 'auto',
-    // Performance
-    fastScrollSensitivity: 5,
-    mouseWheelZoom: false,
-    multiCursorModifier: 'alt',
-    // Bracket matching
-    bracketPairColorization: {
-      enabled: true
-    },
-    guides: {
-      bracketPairs: true,
-      indentation: true
-    }
-  };
+  });
 
   return (
-    <div className={`monaco-editor-container ${disabled ? 'disabled' : ''}`}>
+    <div 
+      ref={containerRef}
+      className={`monaco-editor-container ${disabled ? 'disabled' : ''} ${mobileEnv.isMobile ? 'mobile' : ''} ${mobileEnv.isSmallMobile ? 'small-mobile' : ''}`}
+    >
       <div className="monaco-editor-header">
         <div className="editor-info">
           <span className="language-badge">{language.toUpperCase()}</span>
           {disabled && <span className="status-badge">✅ Completed</span>}
         </div>
-        <div className="editor-hints">
-          {!disabled && (
-            <>
-              <span className="hint-item">Tab: Indent</span>
-              <span className="hint-item">Ctrl+Enter: Run</span>
-              <span className="hint-item">Ctrl+Space: Autocomplete</span>
-            </>
-          )}
-        </div>
+        {!mobileEnv.isMobile && (
+          <div className="editor-hints">
+            {!disabled && (
+              <>
+                <span className="hint-item">Tab: Indent</span>
+                <span className="hint-item">Ctrl+Enter: Run</span>
+                <span className="hint-item">Ctrl+Space: Autocomplete</span>
+              </>
+            )}
+          </div>
+        )}
       </div>
       
       <div className="monaco-editor-wrapper">
         <Editor
-          height={height}
+          height={editorHeight}
           language={language}
           value={value || placeholder}
           onChange={handleEditorChange}

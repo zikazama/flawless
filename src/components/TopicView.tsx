@@ -6,7 +6,7 @@ import { Course, Topic, FillInBlank, QuizQuestion } from '../data/modules';
 import { UserProgress } from '../App';
 import { playCorrectSound, playIncorrectSound, playCaseStudySuccess } from '../utils/sounds';
 import Quiz from './Quiz';
-import MonacoCodeEditor from './MonacoCodeEditor';
+import AdaptiveCodeEditor from './AdaptiveCodeEditor';
 import { getRandomQuestions } from '../data/quizQuestions';
 import './TopicView.css';
 
@@ -916,7 +916,7 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
             </div>
 
             <div className="code-editor">
-              <MonacoCodeEditor
+              <AdaptiveCodeEditor
                 value={caseStudyCode}
                 onChange={(value) => {
                   if (caseStudyCompleted) return; // Disable editing if already completed
@@ -929,6 +929,7 @@ const TopicView: React.FC<TopicViewProps> = ({ courses, userProgress, onComplete
                 disabled={caseStudyCompleted}
                 placeholder="// Tulis kode Anda di sini..."
                 height="400px"
+                forceMobile={true} // Force mobile editor for better cursor positioning
               />
             </div>
 

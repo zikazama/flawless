@@ -1,0 +1,460 @@
+/* Monaco Editor Mobile Responsive Overrides */
+
+/* Base mobile responsive styles */
+@media (max-width: 768px) {
+  .code-editor {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .monaco-editor-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 8px !important;
+    border-width: 1px !important;
+    margin: 0.5rem 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header improvements */
+  .monaco-editor-header {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    padding: 0.6rem !important;
+    align-items: flex-start !important;
+  }
+
+  .editor-info {
+    width: 100% !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .editor-hints {
+    display: none !important;
+  }
+
+  .language-badge {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+
+  /* Monaco editor wrapper */
+  .monaco-editor-wrapper {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Monaco editor section */
+  .monaco-editor-wrapper section {
+    width: 100% !important;
+    height: 300px !important; /* Reduced height for mobile */
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Monaco editor main container */
+  .monaco-editor {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 300px !important;
+    font-size: 14px !important;
+  }
+
+  /* Overflow guard */
+  .overflow-guard {
+    width: 100% !important;
+    height: 300px !important;
+    max-width: 100% !important;
+  }
+
+  /* Margin (line numbers area) */
+  .margin {
+    width: 60px !important; /* Reduced width for mobile */
+    min-width: 60px !important;
+  }
+
+  .glyph-margin {
+    width: 20px !important; /* Reduced glyph margin */
+  }
+
+  .line-numbers {
+    width: 40px !important;
+    font-size: 12px !important;
+  }
+
+  /* Content area */
+  .monaco-scrollable-element.editor-scrollable {
+    width: calc(100% - 60px) !important;
+    left: 60px !important;
+  }
+
+  .lines-content {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+
+  /* View lines */
+  .view-lines {
+    font-size: 14px !important;
+    line-height: 20px !important;
+    width: 100% !important;
+  }
+
+  .view-line {
+    font-size: 14px !important;
+    line-height: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Minimap - hide on mobile */
+  .minimap {
+    display: none !important;
+  }
+
+  /* Scrollbars */
+  .scrollbar.horizontal,
+  .scrollbar.vertical {
+    width: 8px !important;
+    height: 8px !important;
+  }
+
+  .scrollbar .slider {
+    background: rgba(102, 126, 234, 0.6) !important;
+  }
+
+  /* Text area */
+  .inputarea {
+    font-size: 14px !important;
+    line-height: 20px !important;
+  }
+
+  /* Overview ruler - reduce size */
+  .decorationsOverviewRuler {
+    width: 8px !important;
+    right: 0px !important;
+  }
+
+  /* Content widgets */
+  .contentWidgets {
+    font-size: 12px !important;
+  }
+
+  /* Overlay widgets */
+  .overlayWidgets {
+    width: 100% !important;
+  }
+
+  /* Monaco hover */
+  .monaco-hover {
+    max-width: calc(100vw - 20px) !important;
+    font-size: 13px !important;
+  }
+
+  /* Context view */
+  .context-view {
+    max-width: calc(100vw - 20px) !important;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .monaco-editor-wrapper section {
+    height: 250px !important;
+  }
+
+  .monaco-editor,
+  .overflow-guard {
+    height: 250px !important;
+  }
+
+  /* Even smaller margins */
+  .margin {
+    width: 45px !important;
+  }
+
+  .glyph-margin {
+    width: 15px !important;
+  }
+
+  .line-numbers {
+    width: 30px !important;
+    font-size: 11px !important;
+    left: 15px !important;
+  }
+
+  .monaco-scrollable-element.editor-scrollable {
+    width: calc(100% - 45px) !important;
+    left: 45px !important;
+  }
+
+  /* Smaller font */
+  .view-lines,
+  .view-line,
+  .inputarea {
+    font-size: 13px !important;
+    line-height: 18px !important;
+  }
+
+  .view-line {
+    height: 18px !important;
+  }
+
+  /* Reduced padding */
+  .lines-content {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+
+  .monaco-editor-header {
+    padding: 0.4rem !important;
+  }
+
+  .language-badge {
+    font-size: 0.65rem !important;
+    padding: 0.15rem 0.4rem !important;
+  }
+
+  /* Hide decorative elements */
+  .decorationsOverviewRuler {
+    display: none !important;
+  }
+
+  .scroll-decoration {
+    display: none !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .monaco-editor-wrapper section {
+    height: 220px !important;
+  }
+
+  .monaco-editor,
+  .overflow-guard {
+    height: 220px !important;
+  }
+
+  /* Minimal margins */
+  .margin {
+    width: 35px !important;
+  }
+
+  .glyph-margin {
+    width: 10px !important;
+  }
+
+  .line-numbers {
+    width: 25px !important;
+    font-size: 10px !important;
+    left: 10px !important;
+  }
+
+  .monaco-scrollable-element.editor-scrollable {
+    width: calc(100% - 35px) !important;
+    left: 35px !important;
+  }
+
+  /* Very small font */
+  .view-lines,
+  .view-line,
+  .inputarea {
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+
+  .view-line {
+    height: 16px !important;
+  }
+}
+
+/* Landscape mode optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .monaco-editor-wrapper section {
+    height: 180px !important;
+  }
+
+  .monaco-editor,
+  .overflow-guard {
+    height: 180px !important;
+  }
+
+  .monaco-editor-header {
+    padding: 0.3rem !important;
+    gap: 0.3rem !important;
+  }
+
+  .language-badge {
+    font-size: 0.6rem !important;
+    padding: 0.1rem 0.3rem !important;
+  }
+
+  /* Compact margins */
+  .margin {
+    width: 40px !important;
+  }
+
+  .line-numbers {
+    font-size: 10px !important;
+  }
+
+  .view-lines,
+  .view-line,
+  .inputarea {
+    font-size: 11px !important;
+    line-height: 15px !important;
+  }
+
+  .view-line {
+    height: 15px !important;
+  }
+}
+
+/* Touch-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Hide scrollbars completely on touch devices */
+  .scrollbar.horizontal,
+  .scrollbar.vertical {
+    display: none !important;
+  }
+
+  /* Better touch scrolling */
+  .monaco-scrollable-element {
+    -webkit-overflow-scrolling: touch !important;
+    overflow: auto !important;
+  }
+
+  /* Prevent zoom on double tap */
+  .monaco-editor {
+    touch-action: manipulation !important;
+  }
+
+  /* Larger touch targets for interactive elements */
+  .cldr.codicon {
+    min-width: 24px !important;
+    min-height: 24px !important;
+  }
+
+  /* Hide hover-dependent features */
+  .lightBulbWidget,
+  .monaco-hover {
+    display: none !important;
+  }
+
+  /* Simplify cursor */
+  .cursor {
+    width: 2px !important;
+  }
+}
+
+/* High DPI screen optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .monaco-editor {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  .view-lines,
+  .view-line {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+}
+
+/* Dark theme mobile adjustments */
+@media (prefers-color-scheme: dark) {
+  .monaco-editor-container {
+    border-color: #555 !important;
+  }
+
+  .monaco-editor-header {
+    border-bottom-color: #444 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .monaco-editor * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Force responsive behavior */
+.monaco-editor-container,
+.monaco-editor-wrapper,
+.monaco-editor-wrapper section,
+.monaco-editor,
+.overflow-guard {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure proper text wrapping */
+.view-line span {
+  word-break: break-word !important;
+  white-space: pre-wrap !important;
+}
+
+/* Mobile-specific cursor styles */
+@media (max-width: 768px) {
+  .cursor {
+    background: #007acc !important;
+    width: 2px !important;
+  }
+
+  .cursor.hidden {
+    display: none !important;
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  .monaco-editor * {
+    will-change: auto !important;
+  }
+
+  /* Simplify rendering */
+  .view-overlays {
+    opacity: 0.7 !important;
+  }
+
+  .core-guide {
+    opacity: 0.5 !important;
+  }
+
+  /* Reduce visual complexity */
+  .bracket-highlighting-0,
+  .bracket-highlighting-1,
+  .bracket-highlighting-2 {
+    opacity: 0.8 !important;
+  }
+
+  .squiggly-inline-unnecessary {
+    opacity: 0.6 !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .monaco-editor-container {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  .inputarea {
+    -webkit-user-select: text !important;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (max-width: 768px) {
+  .monaco-editor {
+    /* Fix for Android keyboard covering editor */
+    margin-bottom: env(keyboard-inset-height, 0) !important;
+  }
+}

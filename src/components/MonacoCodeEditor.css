@@ -5,6 +5,9 @@
   border: 2px solid #444;
   overflow: hidden;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .monaco-editor-container:not(.disabled):hover {
@@ -195,29 +198,59 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .monaco-editor-container {
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .monaco-editor-header {
     flex-direction: column;
     gap: 0.75rem;
     padding: 0.75rem;
+    align-items: flex-start;
   }
   
   .editor-hints {
     display: none;
   }
   
-  .monaco-editor-container {
-    border-radius: 8px;
+  .editor-info {
+    width: 100%;
+    justify-content: space-between;
   }
   
   .disabled-message {
     font-size: 1rem;
     padding: 0.6rem 1.5rem;
   }
+
+  /* Monaco editor mobile adjustments */
+  .monaco-editor-container .monaco-editor {
+    font-size: 1rem !important;
+  }
+
+  .monaco-editor-container .view-line {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .monaco-editor-container .lines-content {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
 }
 
 @media (max-width: 480px) {
+  .monaco-editor-container {
+    border-radius: 6px;
+    border-width: 1px;
+  }
+
   .monaco-editor-header {
     padding: 0.5rem;
+    gap: 0.5rem;
   }
   
   .language-badge,
@@ -230,4 +263,527 @@
     font-size: 0.9rem;
     padding: 0.5rem 1.2rem;
   }
+
+  /* Smaller font for very small screens */
+  .monaco-editor-container .monaco-editor {
+    font-size: 0.9rem !important;
+  }
+
+  .monaco-editor-container .view-line {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .monaco-editor-container .lines-content {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+/* Landscape mobile optimization */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .monaco-editor-header {
+    padding: 0.4rem 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .editor-loading {
+    height: 250px;
+  }
+
+  .monaco-editor-container .monaco-editor {
+    font-size: 0.85rem !important;
+  }
+
+  .monaco-editor-container .view-line {
+    font-size: 0.85rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .monaco-editor-container {
+    /* Prevent double-tap zoom */
+    touch-action: manipulation;
+  }
+
+  /* Better touch scrolling */
+  .monaco-editor-container .monaco-scrollable-element {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbars on touch devices to save space */
+  .monaco-editor-container .monaco-scrollable-element > .scrollbar {
+    display: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .monaco-editor-container {
+    border-width: 3px;
+  }
+
+  .language-badge,
+  .status-badge {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .monaco-editor-container {
+    transition: none;
+  }
+
+  .loading-spinner {
+    animation: none;
+  }
+
+  .disabled-message {
+    animation: none;
+  }
+}
+
+/* Advanced Mobile Responsive Overrides */
+@media (max-width: 768px) {
+  /* Force full width and proper box sizing */
+  .code-editor,
+  .monaco-editor-container,
+  .monaco-editor-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Monaco editor specific mobile fixes */
+  .monaco-editor-wrapper section {
+    width: 100% !important;
+    height: 280px !important;
+    max-width: 100% !important;
+  }
+
+  /* Monaco editor internal structure */
+  .monaco-editor {
+    width: 100% !important;
+    height: 280px !important;
+    font-size: 14px !important;
+  }
+
+  /* Overflow container */
+  .overflow-guard {
+    width: 100% !important;
+    height: 280px !important;
+  }
+
+  /* Margin area (line numbers) - make more compact */
+  .margin {
+    width: 50px !important;
+  }
+
+  .glyph-margin {
+    width: 18px !important;
+  }
+
+  .line-numbers {
+    width: 32px !important;
+    font-size: 11px !important;
+  }
+
+  /* Content area adjustment */
+  .monaco-scrollable-element.editor-scrollable {
+    width: calc(100% - 50px) !important;
+    left: 50px !important;
+  }
+
+  /* Text content */
+  .view-lines {
+    font-size: 14px !important;
+    line-height: 18px !important;
+  }
+
+  .view-line {
+    height: 18px !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
+  }
+
+  /* Hide minimap completely */
+  .minimap {
+    display: none !important;
+  }
+
+  /* Input area */
+  .inputarea {
+    font-size: 14px !important;
+    line-height: 18px !important;
+  }
+
+  /* Scrollbars - make smaller and visible */
+  .scrollbar.horizontal,
+  .scrollbar.vertical {
+    width: 8px !important;
+    height: 8px !important;
+    opacity: 0.4 !important;
+    background: rgba(102, 126, 234, 0.1) !important;
+    display: block !important;
+  }
+
+  .scrollbar.horizontal .slider,
+  .scrollbar.vertical .slider {
+    background: rgba(102, 126, 234, 0.6) !important;
+    border-radius: 4px !important;
+    display: block !important;
+  }
+
+  .scrollbar.horizontal:active,
+  .scrollbar.vertical:active {
+    opacity: 0.8 !important;
+  }
+
+  /* Overview ruler */
+  .decorationsOverviewRuler {
+    width: 6px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .monaco-editor-wrapper section {
+    height: 240px !important;
+  }
+
+  .monaco-editor,
+  .overflow-guard {
+    height: 240px !important;
+  }
+
+  /* Even smaller margins */
+  .margin {
+    width: 40px !important;
+  }
+
+  .glyph-margin {
+    width: 15px !important;
+  }
+
+  .line-numbers {
+    width: 25px !important;
+    font-size: 10px !important;
+    left: 15px !important;
+  }
+
+  .monaco-scrollable-element.editor-scrollable {
+    width: calc(100% - 40px) !important;
+    left: 40px !important;
+  }
+
+  /* Smaller text */
+  .view-lines,
+  .view-line,
+  .inputarea {
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+
+  .view-line {
+    height: 16px !important;
+  }
+
+  /* Hide decorative elements */
+  .decorationsOverviewRuler,
+  .scroll-decoration {
+    display: none !important;
+  }
+}
+
+/* Landscape mobile */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .monaco-editor-wrapper section {
+    height: 160px !important;
+  }
+
+  .monaco-editor,
+  .overflow-guard {
+    height: 160px !important;
+  }
+
+  .view-lines,
+  .view-line,
+  .inputarea {
+    font-size: 11px !important;
+    line-height: 14px !important;
+  }
+
+  .view-line {
+    height: 14px !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Make scrollbars visible but thin on touch devices */
+  .scrollbar {
+    display: block !important;
+    opacity: 0.3 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .scrollbar:hover,
+  .scrollbar:active {
+    opacity: 0.8 !important;
+  }
+
+  /* Touch scrolling */
+  .monaco-scrollable-element {
+    -webkit-overflow-scrolling: touch !important;
+    overflow: auto !important;
+  }
+
+  /* Allow pan for scrolling but prevent zoom */
+  .monaco-editor,
+  .monaco-editor-container {
+    touch-action: pan-x pan-y !important;
+  }
+
+  /* Hide hover elements */
+  .monaco-hover,
+  .lightBulbWidget {
+    display: none !important;
+  }
+}
+
+/* Mobile and small mobile specific classes */
+.monaco-editor-container.mobile {
+  border-radius: 8px !important;
+  border-width: 1px !important;
+}
+
+.monaco-editor-container.small-mobile {
+  border-radius: 6px !important;
+}
+
+.monaco-editor-container.mobile .monaco-editor-header {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  padding: 0.6rem !important;
+  gap: 0.5rem !important;
+}
+
+.monaco-editor-container.small-mobile .monaco-editor-header {
+  padding: 0.4rem !important;
+  gap: 0.3rem !important;
+}
+
+.monaco-editor-container.mobile .editor-info {
+  width: 100% !important;
+  justify-content: space-between !important;
+}
+
+.monaco-editor-container.mobile .language-badge {
+  font-size: 0.7rem !important;
+  padding: 0.2rem 0.5rem !important;
+}
+
+.monaco-editor-container.small-mobile .language-badge {
+  font-size: 0.65rem !important;
+  padding: 0.15rem 0.4rem !important;
+}
+
+/* Emergency mobile fixes for deeply nested Monaco elements */
+.monaco-editor-container.mobile [class*="monaco-editor"] {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.monaco-editor-container.mobile [class*="overflow-guard"] {
+  width: 100% !important;
+}
+
+.monaco-editor-container.mobile [class*="margin"] {
+  width: 50px !important;
+}
+
+.monaco-editor-container.small-mobile [class*="margin"] {
+  width: 40px !important;
+}
+
+.monaco-editor-container.mobile [class*="monaco-scrollable-element"] {
+  width: calc(100% - 50px) !important;
+}
+
+.monaco-editor-container.small-mobile [class*="monaco-scrollable-element"] {
+  width: calc(100% - 40px) !important;
+}
+
+/* Ensure proper touch scrolling behavior */
+.monaco-editor-container.mobile .monaco-scrollable-element.editor-scrollable {
+  -webkit-overflow-scrolling: touch !important;
+  overflow: auto !important;
+  touch-action: pan-x pan-y !important;
+  overscroll-behavior: contain !important;
+}
+
+.monaco-editor-container.mobile .lines-content {
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+}
+
+.monaco-editor-container.mobile .view-lines {
+  touch-action: pan-x pan-y !important;
+}
+
+/* Scrollbar improvements for mobile */
+.monaco-editor-container.mobile .scrollbar {
+  display: block !important;
+  opacity: 0.4 !important;
+  pointer-events: auto !important;
+  transition: opacity 0.2s ease !important;
+}
+
+.monaco-editor-container.mobile .scrollbar.vertical {
+  width: 8px !important;
+  right: 0px !important;
+}
+
+.monaco-editor-container.mobile .scrollbar.horizontal {
+  height: 8px !important;
+  bottom: 0px !important;
+}
+
+.monaco-editor-container.mobile .scrollbar .slider {
+  background: rgba(102, 126, 234, 0.6) !important;
+  border-radius: 4px !important;
+  display: block !important;
+}
+
+.monaco-editor-container.mobile .scrollbar:active,
+.monaco-editor-container.mobile .scrollbar:hover {
+  opacity: 0.8 !important;
+}
+
+/* Force scrollable dimensions */
+.monaco-editor-container.mobile [data-mprt="6"] {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Textarea for input should allow proper scrolling and cursor positioning */
+.monaco-editor-container.mobile .inputarea {
+  touch-action: manipulation !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-right: 10px !important; /* Extra space for cursor positioning */
+}
+
+/* Fix cursor positioning and line width issues */
+.monaco-editor-container.mobile .view-lines {
+  width: 100% !important;
+  min-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-right: 10px !important; /* Extra space for end-of-line cursor */
+}
+
+.monaco-editor-container.mobile .view-line {
+  width: 100% !important;
+  min-width: 100% !important;
+  padding-right: 10px !important; /* Allow cursor after last character */
+}
+
+/* Ensure lines content has proper width */
+.monaco-editor-container.mobile .lines-content {
+  width: 100% !important;
+  min-width: 100% !important;
+  padding-right: 10px !important;
+}
+
+/* Fix cursor layer positioning */
+.monaco-editor-container.mobile .cursors-layer {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+/* Ensure cursor can be positioned at end of lines */
+.monaco-editor-container.mobile .cursor {
+  max-width: none !important;
+  right: auto !important;
+}
+
+/* Fallback scrolling for older mobile browsers */
+@supports not (overscroll-behavior: contain) {
+  .monaco-editor-container.mobile .monaco-scrollable-element {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-appearance: none) {
+  .monaco-editor-container.mobile .monaco-scrollable-element.editor-scrollable {
+    -webkit-overflow-scrolling: touch !important;
+    overflow: auto !important;
+    position: relative !important;
+  }
+  
+  .monaco-editor-container.mobile .lines-content {
+    -webkit-overflow-scrolling: touch !important;
+    transform: translateZ(0) !important; /* Force hardware acceleration */
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+  .monaco-editor-container.mobile .scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  
+  .monaco-editor-container.mobile .scrollbar .slider {
+    background: rgba(102, 126, 234, 0.8) !important;
+  }
+}
+
+/* Fix editor width calculation issues */
+.monaco-editor-container.mobile .monaco-scrollable-element.editor-scrollable {
+  box-sizing: border-box !important;
+  width: calc(100% - 40px) !important; /* Account for margin */
+}
+
+.monaco-editor-container.small-mobile .monaco-scrollable-element.editor-scrollable {
+  width: calc(100% - 30px) !important; /* Smaller margin for small mobile */
+}
+
+/* Ensure content area allows cursor positioning at line end */
+.monaco-editor-container.mobile .view-overlays {
+  width: calc(100% + 15px) !important; /* Extra space for cursor */
+  min-width: calc(100% + 15px) !important;
+}
+
+/* Fix text area cover */
+.monaco-editor-container.mobile .textAreaCover {
+  width: calc(100% + 15px) !important;
+  min-width: calc(100% + 15px) !important;
+}
+
+/* Ensure overflow guard has proper dimensions */
+.monaco-editor-container.mobile .overflow-guard {
+  padding-right: 15px !important;
+  box-sizing: border-box !important;
+}
+
+/* Fix specific issue with content width */
+.monaco-editor-container.mobile div[style*="width: 188px"] {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.monaco-editor-container.mobile div[style*="width: 178px"] {
+  width: calc(100% - 10px) !important;
+  min-width: calc(100% - 10px) !important;
+}
+
+.monaco-editor-container.mobile div[style*="width: 166px"] {
+  width: calc(100% - 22px) !important;
+  min-width: calc(100% - 22px) !important;
 }
