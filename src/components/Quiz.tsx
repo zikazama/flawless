@@ -23,7 +23,6 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [quizStartTime, setQuizStartTime] = useState<number | null>(null);
@@ -44,7 +43,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
 
   // Define handleTimeUp before using it in effects
   const handleTimeUp = useCallback(() => {
-    if (showResult || isQuizComplete || isPaused) return; // Prevent duplicate submissions
+    if (showResult || isQuizComplete) return; // Prevent duplicate submissions
     
     setIsTimerActive(false);
     setShowResult(true);
@@ -53,11 +52,11 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
     if (soundEnabled) {
       playIncorrectSound();
     }
-  }, [userAnswers, showResult, isQuizComplete, isPaused, soundEnabled]);
+  }, [userAnswers, showResult, isQuizComplete, soundEnabled]);
 
-  // Enhanced timer effect with pause functionality
+  // Enhanced timer effect
   useEffect(() => {
-    if (!quizStarted || !isTimerActive || showResult || isQuizComplete || isPaused) {
+    if (!quizStarted || !isTimerActive || showResult || isQuizComplete) {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
@@ -91,7 +90,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
       // Time's up - auto submit with no answer
       handleTimeUp();
     }
-  }, [timeLeft, isTimerActive, showResult, isQuizComplete, quizStarted, handleTimeUp, isPaused, soundEnabled]);
+  }, [timeLeft, isTimerActive, showResult, isQuizComplete, quizStarted, handleTimeUp, soundEnabled]);
 
   // Reset timer when question changes
   useEffect(() => {
@@ -107,7 +106,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
     if (now - lastClickTime.current < 300) return;
     lastClickTime.current = now;
     
-    if (showResult || !isTimerActive || isQuizComplete || isPaused || isTransitioning) return;
+    if (showResult || !isTimerActive || isQuizComplete || isTransitioning) return;
     
     // Add haptic feedback for mobile
     if ('vibrate' in navigator) {
@@ -144,7 +143,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
         playIncorrectSound();
       }
     }
-  }, [showResult, isTimerActive, isQuizComplete, isPaused, isTransitioning, currentQuestion, userAnswers, score, soundEnabled]);
+  }, [showResult, isTimerActive, isQuizComplete, isTransitioning, currentQuestion, userAnswers, score, soundEnabled]);
 
   const handleNextQuestion = useCallback(async () => {
     if (isTransitioning) return;
@@ -236,7 +235,6 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
     setIsQuizComplete(false);
     setUserAnswers([]);
     setIsTimerActive(true);
-    setIsPaused(false);
     setIsTransitioning(false);
     setIsLoading(false);
     setQuizStartTime(null);
@@ -251,20 +249,12 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
 
   const getTimerClass = useMemo(() => {
     let classes = `timer ${getTimerColor}`;
-    if (timeLeft <= 3 && timeLeft > 0 && !isPaused) {
+    if (timeLeft <= 3 && timeLeft > 0) {
       classes += ' timer-pulsing';
     }
-    if (isPaused) {
-      classes += ' timer-paused';
-    }
     return classes;
-  }, [getTimerColor, timeLeft, isPaused]);
+  }, [getTimerColor, timeLeft]);
 
-  // Pause/Resume functionality
-  const togglePause = useCallback(() => {
-    if (isQuizComplete || showResult) return;
-    setIsPaused(!isPaused);
-  }, [isPaused, isQuizComplete, showResult]);
 
   // Sound toggle functionality
   const toggleSound = useCallback(() => {
@@ -309,14 +299,14 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
 
   // Touch/Swipe gesture handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (showResult || isQuizComplete || isPaused) return;
+    if (showResult || isQuizComplete) return;
     
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
-  }, [showResult, isQuizComplete, isPaused]);
+  }, [showResult, isQuizComplete]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (showResult || isQuizComplete || isPaused || !touchStartX.current) return;
+    if (showResult || isQuizComplete || !touchStartX.current) return;
     
     const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
@@ -343,7 +333,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
     
     touchStartX.current = 0;
     touchStartY.current = 0;
-  }, [showResult, isQuizComplete, isPaused, currentQuestionIndex, questions.length, handleNextQuestion]);
+  }, [showResult, isQuizComplete, currentQuestionIndex, questions.length, handleNextQuestion]);
 
   if (questions.length === 0) {
     return (
@@ -615,20 +605,11 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
         <div className="timer-controls">
           <div className={getTimerClass}>
             <span className="timer-icon">⏱️</span>
-            <span className="timer-text">{isPaused ? '⏸️' : timeLeft + 's'}</span>
+            <span className="timer-text">{timeLeft + 's'}</span>
           </div>
           
           {/* Control buttons */}
           <div className="control-buttons">
-            <button 
-              className={`control-btn ${isPaused ? 'resume' : 'pause'}`}
-              onClick={togglePause}
-              disabled={showResult}
-              title={isPaused ? 'Resume' : 'Pause'}
-            >
-              {isPaused ? '▶️' : '⏸️'}
-            </button>
-            
             <button 
               className={`control-btn sound-btn ${soundEnabled ? 'sound-on' : 'sound-off'}`}
               onClick={toggleSound}
@@ -664,10 +645,9 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
                   ${showWrongAnswer ? 'incorrect' : ''}
                   ${isSelected && !showResult ? 'selected' : ''}
                   ${showResult ? 'disabled' : ''}
-                  ${isPaused ? 'paused' : ''}
                 `}
                 onClick={() => handleAnswerSelect(index)}
-                disabled={showResult || isPaused}
+                disabled={showResult}
               >
                 <span className="option-label">{String.fromCharCode(65 + index)}.</span>
                 <span className="option-text">{option}</span>
