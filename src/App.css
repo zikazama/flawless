@@ -83,6 +83,14 @@ body {
 .header-nav {
   display: flex;
   gap: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  scroll-snap-type: x mandatory;
+}
+
+.header-nav::-webkit-scrollbar { /* Safari/Chrome */
+  display: none;
 }
 
 .nav-link {
@@ -92,6 +100,10 @@ body {
   border-radius: 8px;
   transition: background-color 0.3s;
   font-weight: 500;
+  white-space: nowrap;
+  flex: 0 0 auto; /* Prevent shrinking in horizontal scroll */
+  scroll-snap-align: start;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-link:hover {
@@ -124,7 +136,18 @@ body {
   }
 
   .header-nav {
-    justify-content: center;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding-bottom: 0.25rem;
+    margin: 0 -0.5rem; /* allow edge-to-edge scroll */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.6rem 0.85rem; /* bigger touch target */
+    font-size: 0.95rem;
   }
 
   .header-controls {
