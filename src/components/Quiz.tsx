@@ -143,7 +143,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
         playIncorrectSound();
       }
     }
-  }, [showResult, isTimerActive, isQuizComplete, isTransitioning, currentQuestion, userAnswers, score, soundEnabled]);
+  }, [showResult, isTimerActive, isQuizComplete, isTransitioning, currentQuestion, currentQuestionIndex, userAnswers, score, soundEnabled]);
 
   const handleNextQuestion = useCallback(async () => {
     if (isTransitioning) return;
@@ -208,7 +208,7 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, topicId }) => {
     
     setIsLoading(false);
     setIsTransitioning(false);
-  }, [currentQuestionIndex, questions.length, score, selectedAnswer, currentQuestion, passingScore, topicId, onComplete, isTransitioning]);
+  }, [currentQuestionIndex, questions.length, score, selectedAnswer, currentQuestion, passingScore, topicId, onComplete, isTransitioning, quizStartTime, userAnswers]);
 
   const handleStartQuiz = useCallback(async () => {
     setIsLoading(true);

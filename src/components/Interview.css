@@ -1,0 +1,129 @@
+.interview-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.interview-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.level-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.level-btn {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.level-btn.active {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+
+.search-input {
+  flex: 1 1 220px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.qa-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.qa-card {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.qa-header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: #fafafa;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.qa-card.open .qa-header {
+  background: #f0f0f0;
+}
+
+.qa-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.level-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+  background: #e9e9e9;
+}
+
+.level-badge.junior { background: #e6f4ea; color: #0b7a2a; }
+.level-badge.intermediate { background: #e8f0fe; color: #1a73e8; }
+.level-badge.senior { background: #fce8e6; color: #c5221f; }
+
+.category {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.question-text {
+  font-weight: 600;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.qa-card.open .chevron { transform: rotate(180deg); }
+
+.qa-body {
+  padding: 0.8rem 1rem 1rem;
+  color: #1a1a1a;
+}
+
+.qa-body p {
+  margin: 0.25rem 0;
+}
+
+.loading, .error, .empty {
+  padding: 1rem;
+  text-align: center;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .qa-header { grid-template-columns: 1fr auto; }
+  .qa-meta { display: none; }
+}
+
+

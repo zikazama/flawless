@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import ModuleList from './components/ModuleList';
 import TopicView from './components/TopicView';
 import AboutAuthor from './components/AboutAuthor';
+import Interview from './components/Interview';
 import BadgesView from './components/BadgesView';
 import BadgeNotification from './components/BadgeNotification';
 import { useBadges } from './hooks/useBadges';
@@ -101,6 +102,7 @@ function App() {
           <nav className="header-nav">
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/badges" className="nav-link">Badges</Link>
+            <Link to="/interview" className="nav-link">Interview</Link>
             <Link to="/about" className="nav-link">About</Link>
           </nav>
           <div className="header-controls">
@@ -121,6 +123,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage courses={courses} userProgress={userProgress} />} />
           <Route path="/badges" element={<BadgesView userProgress={userProgress} />} />
+          <Route path="/interview" element={<Interview />} />
           <Route path="/about" element={<AboutAuthor />} />
           <Route path="/course/:courseId" element={<ModuleList courses={courses} userProgress={userProgress} />} />
           <Route path="/course/:courseId/module/:moduleId/topic/:topicId" element={
